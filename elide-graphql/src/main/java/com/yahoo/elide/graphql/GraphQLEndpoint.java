@@ -8,6 +8,7 @@ package com.yahoo.elide.graphql;
 import static com.yahoo.elide.graphql.QueryRunner.buildErrorResponse;
 import com.yahoo.elide.Elide;
 import com.yahoo.elide.ElideResponse;
+import com.yahoo.elide.core.dictionary.EntityDictionary;
 import com.yahoo.elide.core.exceptions.InvalidOperationException;
 import com.yahoo.elide.core.security.User;
 import com.yahoo.elide.jsonapi.resources.SecurityContextUser;
@@ -50,7 +51,13 @@ public class GraphQLEndpoint {
         log.debug("Started ~~");
         this.elide = elide;
         this.runners = new HashMap<>();
-        for (String apiVersion : elide.getElideSettings().getDictionary().getApiVersions()) {
+        EntityDictionary dictionary = elide.getElideSettings().getDictionary();
+        for (String apiVersion : dictionary.getApiVersions()) {
+            if (dictionary.getBoundClasses((binding) -> ! binding.isHidden()
+                    && binding.isElideModel()
+                    && binding.getApiVersion().equals(apiVersion)).isEmpty()) {
+                continue;
+            }
             runners.put(apiVersion, new QueryRunner(elide, apiVersion));
         }
     }

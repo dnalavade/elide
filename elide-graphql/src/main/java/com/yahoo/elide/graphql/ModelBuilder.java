@@ -153,7 +153,12 @@ public class ModelBuilder {
      * @return The built schema.
      */
     public GraphQLSchema build() {
-        Set<Type<?>> allClasses = entityDictionary.getBoundClassesByVersion(apiVersion);
+
+        Set<Type<?>> allClasses = entityDictionary.getBoundClasses((binding) -> {
+            return binding.getApiVersion().equals(apiVersion)
+                    && !binding.isHidden()
+                    && binding.isElideModel();
+        });
 
         if (allClasses.isEmpty()) {
             throw new IllegalArgumentException("None of the provided classes are exported by Elide");

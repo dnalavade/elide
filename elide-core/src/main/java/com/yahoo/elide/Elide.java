@@ -113,7 +113,7 @@ public class Elide {
 
         //Register all Elide models
         scanner.getAnnotatedClasses(Include.class).stream()
-                .forEach((cls -> elideSettings.getDictionary().bindEntity(cls)));
+                .forEach((cls -> elideSettings.getDictionary().bindEntity(cls, Set.of(), true)));
 
         registerCustomSerde();
     }

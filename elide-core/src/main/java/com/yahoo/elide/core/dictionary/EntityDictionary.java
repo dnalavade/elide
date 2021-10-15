@@ -36,6 +36,7 @@ import com.yahoo.elide.core.exceptions.HttpStatusException;
 import com.yahoo.elide.core.exceptions.InternalServerErrorException;
 import com.yahoo.elide.core.exceptions.InvalidAttributeException;
 import com.yahoo.elide.core.lifecycle.LifeCycleHook;
+import com.yahoo.elide.core.request.Pagination;
 import com.yahoo.elide.core.security.PermissionExecutor;
 import com.yahoo.elide.core.security.checks.Check;
 import com.yahoo.elide.core.security.checks.UserCheck;
@@ -88,6 +89,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
@@ -305,16 +307,22 @@ public class EntityDictionary {
     public Type<?> getEntityClass(String entityName, String version) {
         Type<?> lookup = bindJsonApiToEntity.getOrDefault(Pair.of(entityName, version), null);
 
-        if (lookup == null) {
-            //Elide standard models transcend API versions.
-            return entityBindings.values().stream()
-                    .filter(binding -> binding.entityClass.getName().startsWith(ELIDE_PACKAGE_PREFIX))
-                    .filter(binding -> binding.jsonApiType.equals(entityName))
-                    .map(EntityBinding::getEntityClass)
-                    .findFirst()
-                    .orElse(null);
+        if (lookup != null) {
+            EntityBinding binding = getEntityBinding(lookup);
+            if (!binding.isHidden()) {
+                return lookup;
+            } else {
+                return null;
+            }
         }
-        return lookup;
+            //Elide standard models transcend API versions.
+        return entityBindings.values().stream()
+            .filter(binding -> binding.entityClass.getName().startsWith(ELIDE_PACKAGE_PREFIX))
+            .filter(binding -> binding.jsonApiType.equals(entityName))
+            .filter(binding -> ! binding.isHidden())
+            .map(EntityBinding::getEntityClass)
+            .findFirst()
+            .orElse(null);
     }
 
     /**
@@ -499,8 +507,17 @@ public class EntityDictionary {
      * @return the bound classes
      */
     public Set<Type<?>> getBoundClasses(boolean elideModelsOnly) {
+        return getBoundClasses(binding -> elideModelsOnly ? binding.isElideModel() : true);
+    }
+
+    /**
+     * Get all bound classes.
+     * @param lens Function to filter the bound classes you are looking for.
+     * @return the bound classes
+     */
+    public Set<Type<?>> getBoundClasses(Predicate<EntityBinding> lens) {
         return entityBindings.values().stream()
-                .filter(binding -> elideModelsOnly ? binding.isElideModel() : true)
+                .filter(lens::test)
                 .map(EntityBinding::getEntityClass)
                 .collect(Collectors.toSet());
     }

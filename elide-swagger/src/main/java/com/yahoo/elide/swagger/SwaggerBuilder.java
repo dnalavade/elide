@@ -740,16 +740,19 @@ public class SwaggerBuilder {
         ModelConverter converter = new JsonApiModelResolver(dictionary);
         converters.addConverter(converter);
 
-        String apiVersion = swagger.getInfo().getVersion();
-        if (apiVersion == null) {
-            apiVersion = NO_VERSION;
-        }
+        final String apiVersion = (swagger.getInfo().getVersion()) == null
+                ? NO_VERSION : swagger.getInfo().getVersion();
+
+        Set<Type<?>> exposedModels = dictionary.getBoundClasses((binding) -> {
+            return binding.getApiVersion().equals(apiVersion)
+                    && !binding.isHidden()
+                    && binding.isElideModel();
+        });
 
         if (allClasses.isEmpty()) {
-            allClasses = dictionary.getBoundClasses().
-                    getBoundClassesByVersion(apiVersion);
+            allClasses = exposedModels;
         } else {
-            allClasses = Sets.intersection(dictionary.getBoundClassesByVersion(apiVersion), allClasses);
+            allClasses = Sets.intersection(exposedModels, allClasses);
             if (allClasses.isEmpty()) {
                 throw new IllegalArgumentException("None of the provided classes are exported by Elide");
             }
