@@ -746,7 +746,8 @@ public class SwaggerBuilder {
         }
 
         if (allClasses.isEmpty()) {
-            allClasses = dictionary.getBoundClassesByVersion(apiVersion);
+            allClasses = dictionary.getBoundClasses().
+                    getBoundClassesByVersion(apiVersion);
         } else {
             allClasses = Sets.intersection(dictionary.getBoundClassesByVersion(apiVersion), allClasses);
             if (allClasses.isEmpty()) {

@@ -153,8 +153,9 @@ public class MetaDataStore implements DataStore {
             String version = EntityDictionary.getModelVersion(table);
             HashMapDataStore hashMapDataStore = hashMapDataStores.computeIfAbsent(version,
                     getHashMapDataStoreInitializer(scanner));
-            hashMapDataStore.getDictionary().bindEntity(table, Collections.singleton(Join.class));
-            this.metadataDictionary.bindEntity(table, Collections.singleton(Join.class));
+            hashMapDataStore.getDictionary().bindEntity(table, Collections.singleton(Join.class), false);
+
+            this.metadataDictionary.bindEntity(table, Collections.singleton(Join.class), false);
             this.modelsToBind.add(table);
             this.hashMapDataStores.putIfAbsent(version, hashMapDataStore);
         });
@@ -211,8 +212,8 @@ public class MetaDataStore implements DataStore {
             String version = EntityDictionary.getModelVersion(cls);
             HashMapDataStore hashMapDataStore = hashMapDataStores.computeIfAbsent(version,
                     getHashMapDataStoreInitializer(scanner));
-            hashMapDataStore.getDictionary().bindEntity(cls, Collections.singleton(Join.class));
-            this.metadataDictionary.bindEntity(cls, Collections.singleton(Join.class));
+            hashMapDataStore.getDictionary().bindEntity(cls, Collections.singleton(Join.class), false);
+            this.metadataDictionary.bindEntity(cls, Collections.singleton(Join.class), false);
             this.hashMapDataStores.putIfAbsent(version, hashMapDataStore);
 
             Include include = (Include) EntityDictionary.getFirstPackageAnnotation(cls, Arrays.asList(Include.class));
@@ -241,7 +242,7 @@ public class MetaDataStore implements DataStore {
     public void populateEntityDictionary(EntityDictionary dictionary) {
         if (enableMetaDataStore) {
             metadataModelClasses.forEach(
-                cls -> dictionary.bindEntity(cls, Collections.singleton(Join.class))
+                cls -> dictionary.bindEntity(cls, Collections.singleton(Join.class), false)
             );
         }
     }

@@ -72,14 +72,14 @@ public class AggregationDataStore implements DataStore {
 
         if (dynamicCompiledClasses != null && dynamicCompiledClasses.size() != 0) {
             dynamicCompiledClasses.forEach(dynamicLoadedClass -> {
-                dictionary.bindEntity(dynamicLoadedClass, Collections.singleton(Join.class));
+                dictionary.bindEntity(dynamicLoadedClass, Collections.singleton(Join.class), false);
                 validateModelExpressionChecks(dictionary, dynamicLoadedClass);
                 dictionary.bindPermissionExecutor(dynamicLoadedClass, aggPermissionExecutor);
             });
         }
 
         dictionary.getScanner().getAnnotatedClasses(AGGREGATION_STORE_CLASSES).forEach(cls -> {
-                    dictionary.bindEntity(cls, Collections.singleton(Join.class));
+                    dictionary.bindEntity(cls, Collections.singleton(Join.class), false);
                     validateModelExpressionChecks(dictionary, ClassType.of(cls));
                     dictionary.bindPermissionExecutor(cls, aggPermissionExecutor);
                 }

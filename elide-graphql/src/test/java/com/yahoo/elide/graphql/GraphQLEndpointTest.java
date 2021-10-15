@@ -187,7 +187,7 @@ public class GraphQLEndpointTest {
         String graphQLRequest = document(
                 selections(
                         field(
-                                "book",
+                                "testBook",
                                 selections(
                                         field("id"),
                                         field("title"),
@@ -205,7 +205,7 @@ public class GraphQLEndpointTest {
         String graphQLResponse = document(
                 selection(
                         field(
-                                "book",
+                                "testBook",
                                 selections(
                                         field("id", "1"),
                                         field("title", "My first book"),
@@ -234,7 +234,7 @@ public class GraphQLEndpointTest {
                         ),
                         selections(
                                 field(
-                                        "book",
+                                        "testBook",
                                         arguments(
                                                 argument("ids", "$bookId")
                                         ),
@@ -256,7 +256,7 @@ public class GraphQLEndpointTest {
         String graphQLResponse = document(
                 selection(
                         field(
-                                "book",
+                                "testBook",
                                 selections(
                                         field("id", "1"),
                                         field("title", "My first book"),
@@ -282,7 +282,7 @@ public class GraphQLEndpointTest {
         String graphQLRequest = document(
                 selection(
                         field(
-                                "book",
+                                "testBook",
                                 selection(
                                         field("user1SecretField")
                                 )
@@ -293,7 +293,7 @@ public class GraphQLEndpointTest {
         String graphQLResponse = document(
                 selection(
                         field(
-                                "book",
+                                "testBook",
                                 selection(
                                         field("user1SecretField", "this is a secret for user 1 only1")
                                 )
@@ -310,7 +310,7 @@ public class GraphQLEndpointTest {
         String graphQLRequest = document(
                 selection(
                         field(
-                                "book",
+                                "testBook",
                                 selection(
                                         field("user1SecretField")
                                 )
@@ -319,7 +319,7 @@ public class GraphQLEndpointTest {
         ).toQuery();
 
         //Empty response because the collection is skipped because of failed user check.
-        String expected = "{\"data\":{\"book\":{\"edges\":[]}}}";
+        String expected = "{\"data\":{\"testBook\":{\"edges\":[]}}}";
 
         Response response = endpoint.post(uriInfo, requestHeaders, user2, graphQLRequestToJSON(graphQLRequest));
         assert200EqualBody(response, expected);
@@ -331,13 +331,13 @@ public class GraphQLEndpointTest {
         String graphQLRequest = document(
                 selections(
                         field(
-                                "book",
+                                "testBook",
                                 selection(
                                         field("user1SecretField")
                                 )
                         ),
                         field(
-                                "book",
+                                "testBook",
                                 selections(
                                         field("id"),
                                         field("title")
@@ -394,7 +394,7 @@ public class GraphQLEndpointTest {
         String graphQLRequest = document(
                 selection(
                         field(
-                                "book",
+                                "testBook",
                                 arguments(
                                         argument("op", "UPSERT"),
                                         argument("data", book)
@@ -413,7 +413,7 @@ public class GraphQLEndpointTest {
         graphQLRequest = document(
                 selection(
                         field(
-                                "book",
+                                "testBook",
                                 selections(
                                         field("id"),
                                         field("title")
@@ -425,7 +425,7 @@ public class GraphQLEndpointTest {
         String expected = document(
                 selection(
                         field(
-                                "book",
+                                "testBook",
                                selections(
                                        field("id", "1"),
                                        field("title", "My first book")
@@ -452,7 +452,7 @@ public class GraphQLEndpointTest {
                 mutation(
                         selection(
                                 field(
-                                        "book",
+                                        "testBook",
                                         selections(
                                                 field("id"),
                                                 field(
@@ -485,7 +485,7 @@ public class GraphQLEndpointTest {
         graphQLRequest = document(
                 selection(
                         field(
-                                "book",
+                                "testBook",
                                 selections(
                                         field("id"),
                                         field(
@@ -509,7 +509,7 @@ public class GraphQLEndpointTest {
         String expected = document(
                 selection(
                         field(
-                                "book",
+                                "testBook",
                                 selections(
                                         field("id", "1"),
                                         field(
@@ -544,7 +544,7 @@ public class GraphQLEndpointTest {
                 mutation(
                         selection(
                                 field(
-                                        "book",
+                                        "testBook",
                                         arguments(
                                                 argument("op", "UPSERT"),
                                                 argument("data", book)
@@ -561,7 +561,7 @@ public class GraphQLEndpointTest {
         String expected = document(
                 selection(
                         field(
-                                "book",
+                                "testBook",
                                 selections(
                                         field("id", "1"),
                                         field("title", "my new book!")
@@ -589,7 +589,7 @@ public class GraphQLEndpointTest {
                 mutation(
                         selection(
                                 field(
-                                        "book",
+                                        "testBook",
                                         arguments(
                                                 argument("op", "UPSERT"),
                                                 argument("data", book)
@@ -624,7 +624,7 @@ public class GraphQLEndpointTest {
                 mutation(
                         selection(
                                 field(
-                                        "book",
+                                        "testBook",
                                         arguments(
                                                 argument("op", "UPSERT"),
                                                 argument("data", book)
@@ -642,7 +642,7 @@ public class GraphQLEndpointTest {
         String expected = document(
                 selection(
                         field(
-                                "book",
+                                "testBook",
                                 selections(
                                         field("id", "2"),
                                         field("title", "my new book!"),
@@ -658,7 +658,7 @@ public class GraphQLEndpointTest {
         graphQLRequest = document(
                 selection(
                         field(
-                                "book",
+                                "testBook",
                                 selections(
                                         field("id"),
                                         field("title"),
@@ -677,7 +677,7 @@ public class GraphQLEndpointTest {
         expected = document(
                 selection(
                         field(
-                                "book",
+                                "testBook",
                                 selections(
                                         field("id", "1"),
                                         field("title", "My first book"),
@@ -720,7 +720,7 @@ public class GraphQLEndpointTest {
                 mutation(
                         selection(
                                 field(
-                                        "book",
+                                        "testBook",
                                         arguments(
                                                 argument("op", "UPSERT"),
                                                 argument("data", book)
@@ -745,7 +745,7 @@ public class GraphQLEndpointTest {
                 mutation(
                         selection(
                                 field(
-                                        "book",
+                                        "testBook",
                                         selections(
                                                 field("id"),
                                                 field(
@@ -771,7 +771,7 @@ public class GraphQLEndpointTest {
         String expected = document(
                 selection(
                         field(
-                                "book",
+                                "testBook",
                                 selections(
                                         field("id", "1"),
                                         field(
@@ -799,7 +799,7 @@ public class GraphQLEndpointTest {
                 mutation(
                         selection(
                                 field(
-                                        "book",
+                                        "testBook",
                                         selections(
                                                 field("id"),
                                                 field(
@@ -825,7 +825,7 @@ public class GraphQLEndpointTest {
         String graphQLRequest = document(
                 selections(
                         field(
-                                "author",
+                                "testAuthor",
                                 selections(
                                         field("id"),
                                         field("name"),
@@ -838,7 +838,7 @@ public class GraphQLEndpointTest {
                                 )
                         ),
                         field(
-                                "book",
+                                "testBook",
                                 selections(
                                         field("id"),
                                         field("title"),
@@ -856,7 +856,7 @@ public class GraphQLEndpointTest {
         String graphQLResponse = document(
                 selections(
                         field(
-                                "author",
+                                "testAuthor",
                                 selections(
                                         field("id", "1"),
                                         field("name", "Ricky Carmichael"),
@@ -876,7 +876,7 @@ public class GraphQLEndpointTest {
                                 )
                         ),
                         field(
-                                "book",
+                                "testBook",
                                 selections(
                                         field("id", "1"),
                                         field("title", "My first book"),
@@ -902,7 +902,7 @@ public class GraphQLEndpointTest {
                 selections(
                         field(
                                 "AuthorBook",
-                                "author",
+                                "testAuthor",
                                 selections(
                                         field("id"),
                                         field(
@@ -915,7 +915,7 @@ public class GraphQLEndpointTest {
                         ),
                         field(
                                 "AuthorName",
-                                "author",
+                                "testAuthor",
                                 selections(
                                         field("id"),
                                         field("name")
@@ -974,7 +974,7 @@ public class GraphQLEndpointTest {
                         selections(
                                 field(
                                         "Author_1",
-                                        "author",
+                                        "testAuthor",
                                         arguments(
                                                 argument("ids", "$author1")
                                         ),
@@ -991,7 +991,7 @@ public class GraphQLEndpointTest {
                                 ),
                                 field(
                                         "Author_2",
-                                        "author",
+                                        "testAuthor",
                                         arguments(
                                                 argument("ids", "$author2")
                                         ),

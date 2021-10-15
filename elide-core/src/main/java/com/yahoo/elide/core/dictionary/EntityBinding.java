@@ -73,6 +73,10 @@ public class EntityBinding {
 
     @Getter
     private final boolean isElideModel;
+
+    @Getter
+    private final boolean hidden;
+
     @Getter
     public final Type<?> entityClass;
     @Getter
@@ -137,6 +141,7 @@ public class EntityBinding {
         entityPermissions = EntityPermissions.EMPTY_PERMISSIONS;
         idGenerated = false;
         injector = null;
+        hidden = true;
     }
 
     /**
@@ -149,7 +154,7 @@ public class EntityBinding {
     public EntityBinding(Injector injector,
                          Type<?> cls,
                          String type) {
-        this(injector, cls, type, NO_VERSION, new HashSet<>());
+        this(injector, cls, type, NO_VERSION, false, new HashSet<>());
     }
 
     /**
@@ -159,14 +164,16 @@ public class EntityBinding {
      * @param cls Entity class
      * @param type Declared Elide type name
      * @param apiVersion API version
+     * @param hidden Whether or not this model is exposed via the API
      * @param hiddenAnnotations Annotations for hiding a field in API
      */
     public EntityBinding(Injector injector,
                          Type<?> cls,
                          String type,
                          String apiVersion,
+                         boolean hidden,
                          Set<Class<? extends Annotation>> hiddenAnnotations) {
-        this(injector, cls, type, apiVersion, true, hiddenAnnotations);
+        this(injector, cls, type, apiVersion, true, hidden, hiddenAnnotations);
     }
 
     /**
@@ -177,6 +184,7 @@ public class EntityBinding {
      * @param type Declared Elide type name
      * @param apiVersion API version
      * @param isElideModel Whether or not this type is an Elide model or not.
+     * @param hidden Whether or not the model is exposed via the API.
      * @param hiddenAnnotations Annotations for hiding a field in API
      */
     public EntityBinding(Injector injector,
@@ -184,8 +192,10 @@ public class EntityBinding {
                          String type,
                          String apiVersion,
                          boolean isElideModel,
+                         boolean hidden,
                          Set<Class<? extends Annotation>> hiddenAnnotations) {
         this.isElideModel = isElideModel;
+        this.hidden = hidden;
         this.injector = injector;
         entityClass = cls;
         jsonApiType = type;

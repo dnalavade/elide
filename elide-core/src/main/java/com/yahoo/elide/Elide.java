@@ -5,6 +5,7 @@
  */
 package com.yahoo.elide;
 
+import com.yahoo.elide.annotation.Include;
 import com.yahoo.elide.core.RequestScope;
 import com.yahoo.elide.core.TransactionRegistry;
 import com.yahoo.elide.core.audit.AuditLogger;
@@ -109,6 +110,10 @@ public class Elide {
         this.transactionRegistry = new TransactionRegistry();
 
         elideSettings.getSerdes().forEach((type, serde) -> registerCustomSerde(type, serde, type.getSimpleName()));
+
+        //Register all Elide models
+        scanner.getAnnotatedClasses(Include.class).stream()
+                .forEach((cls -> elideSettings.getDictionary().bindEntity(cls)));
 
         registerCustomSerde();
     }

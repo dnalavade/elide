@@ -965,7 +965,7 @@ public class EntityDictionary {
      * @param cls Entity bean class
      */
     public void bindEntity(Type<?> cls) {
-        bindEntity(cls, new HashSet<>());
+        bindEntity(cls, new HashSet<>(), false);
     }
 
     /**
@@ -973,9 +973,10 @@ public class EntityDictionary {
      *
      * @param cls Entity bean class
      * @param hiddenAnnotations Annotations for hiding a field in API
+     * @param hidden Whether or not this model is exposed via the API.
      */
-    public void bindEntity(Class<?> cls, Set<Class<? extends Annotation>> hiddenAnnotations) {
-        bindEntity(ClassType.of(cls), hiddenAnnotations);
+    public void bindEntity(Class<?> cls, Set<Class<? extends Annotation>> hiddenAnnotations, boolean hidden) {
+        bindEntity(ClassType.of(cls), hiddenAnnotations, hidden);
     }
 
     /**
@@ -983,8 +984,9 @@ public class EntityDictionary {
      *
      * @param cls Entity bean class
      * @param hiddenAnnotations Annotations for hiding a field in API
+     * @param hidden Whether or not this model is exposed via the API
      */
-    public void bindEntity(Type<?> cls, Set<Class<? extends Annotation>> hiddenAnnotations) {
+    public void bindEntity(Type<?> cls, Set<Class<? extends Annotation>> hiddenAnnotations, boolean hidden) {
         if (entitiesToExclude.contains(cls)) {
             //Exclude Entity
             return;
@@ -1007,7 +1009,7 @@ public class EntityDictionary {
 
         bindJsonApiToEntity.put(Pair.of(type, version), declaredClass);
         apiVersions.add(version);
-        EntityBinding binding = new EntityBinding(injector, declaredClass, type, version, hiddenAnnotations);
+        EntityBinding binding = new EntityBinding(injector, declaredClass, type, version, hidden, hiddenAnnotations);
         entityBindings.put(declaredClass, binding);
 
         Include include = (Include) getFirstAnnotation(declaredClass, Arrays.asList(Include.class));
@@ -1987,6 +1989,7 @@ public class EntityDictionary {
                     next,
                     next.getSimpleName(),
                     binding.getApiVersion(),
+                    false,
                     false,
                     new HashSet<>());
 
