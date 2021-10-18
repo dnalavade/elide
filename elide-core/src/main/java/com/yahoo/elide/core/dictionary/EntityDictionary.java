@@ -36,7 +36,6 @@ import com.yahoo.elide.core.exceptions.HttpStatusException;
 import com.yahoo.elide.core.exceptions.InternalServerErrorException;
 import com.yahoo.elide.core.exceptions.InvalidAttributeException;
 import com.yahoo.elide.core.lifecycle.LifeCycleHook;
-import com.yahoo.elide.core.request.Pagination;
 import com.yahoo.elide.core.security.PermissionExecutor;
 import com.yahoo.elide.core.security.checks.Check;
 import com.yahoo.elide.core.security.checks.UserCheck;
